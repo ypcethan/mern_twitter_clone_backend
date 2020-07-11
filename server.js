@@ -3,6 +3,8 @@ const express = require('express');
 const logger = require('morgan');
 const dotenv = require('dotenv');
 const connectDB = require('./utils/db');
+const errorHandler = require('./middleware/errorHandler');
+const userRouter = require('./resources/user/user.route');
 
 const app = express();
 if (process.env.NODE_ENV === 'development') {
@@ -10,11 +12,17 @@ if (process.env.NODE_ENV === 'development') {
   app.use(logger('dev'));
 }
 
-const PORT = process.env.PORT || 5000;
+// Middleware
+app.use(express.json());
+// Mounting router
+app.use('/v1/users', userRouter);
 
 app.get('/', (req, res) => {
   res.json('Hello');
 });
+
+app.use(errorHandler);
+const PORT = process.env.PORT || 5000;
 const start = async () => {
   await connectDB();
   app.listen(PORT, () => {
