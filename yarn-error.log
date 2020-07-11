@@ -1,0 +1,36 @@
+Arguments: 
+  /Users/ethanchen/.nvm/versions/node/v12.17.0/bin/node /usr/local/Cellar/yarn/1.22.4/libexec/bin/yarn.js init
+
+PATH: 
+  /Users/ethanchen/.rvm/gems/ruby-2.6.0/bin:/Users/ethanchen/.rvm/gems/ruby-2.6.0@global/bin:/Users/ethanchen/.rvm/rubies/ruby-2.6.0/bin:/Users/ethanchen/.nvm/versions/node/v12.17.0/bin:/usr/local/opt/icu4c/sbin:/usr/local/opt/icu4c/bin:/Library/Frameworks/Python.framework/Versions/3.8/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/Library/TeX/texbin:/usr/local/share/dotnet:/opt/X11/bin:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/Applications/Xamarin Workbooks.app/Contents/SharedSupport/path-bin:/Users/ethanchen/.rvm/gems/ruby-2.6.0/bin:/Users/ethanchen/.rvm/gems/ruby-2.6.0@global/bin:/Users/ethanchen/.rvm/rubies/ruby-2.6.0/bin:/Users/ethanchen/.nvm/versions/node/v12.17.0/bin:/usr/local/opt/icu4c/sbin:/usr/local/opt/icu4c/bin:/Library/Frameworks/Python.framework/Versions/3.8/bin:/Users/ethanchen/.composer/vendor/bin:/usr/local/mongodb/bin:/Users/ethanchen/.rvm/bin:/Users/ethanchen/.composer/vendor/bin:/usr/local/mongodb/bin
+
+Yarn version: 
+  1.22.4
+
+Node version: 
+  12.17.0
+
+Platform: 
+  darwin x64
+
+Trace: 
+  Error: canceled
+      at Interface.<anonymous> (/usr/local/Cellar/yarn/1.22.4/libexec/lib/cli.js:137008:13)
+      at Interface.emit (events.js:315:20)
+      at Interface._ttyWrite (readline.js:866:16)
+      at ReadStream.onkeypress (readline.js:205:10)
+      at ReadStream.emit (events.js:315:20)
+      at emitKeys (internal/readline/utils.js:335:14)
+      at emitKeys.next (<anonymous>)
+      at ReadStream.onData (readline.js:1133:36)
+      at ReadStream.emit (events.js:315:20)
+      at addChunk (_stream_readable.js:295:12)
+
+npm manifest: 
+  No manifest
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
