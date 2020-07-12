@@ -15,7 +15,7 @@ exports.register = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
+    const user = await User.findOne({ email: req.body.email }).select('+password');
     if (!user) {
       return res.status(400).json({ success: false, message: 'User does not exist with that email' });
     }

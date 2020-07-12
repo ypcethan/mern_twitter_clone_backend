@@ -5,21 +5,24 @@ const bcrypt = require('bcryptjs');
 const userSchema = mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: [true, 'Please add a name'],
   },
   username: {
     type: String,
   },
   email: {
     type: String,
-    required: true,
+    required: [true, 'Please add a email'],
     unique: true,
   },
   password: {
     type: String,
-    required: true,
+    required: [true, 'Please add a password'],
+    minlength: 5,
+    select: false,
   },
-});
+},
+{ timestamps: true });
 
 userSchema.pre('save', async function (next) {
   if (this.isModified('password')) {
