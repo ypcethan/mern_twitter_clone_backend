@@ -10,30 +10,31 @@ const { tweetOneData, tweetThreeData, tweetTwoData } = require('./fixture/tweet.
 beforeAll(async () => {
   await connect();
 });
-// beforeEach(async () => {
-//   await clearDatabase();
-// });
+
+afterEach(async () => {
+  await clearDatabase();
+});
 afterAll(async () => {
   await closeDatabase();
 });
 
 const baseUrl = '/v1/tweets/';
-let token;
-beforeAll(async () => {
-  await User.create(userOneData);
-  const response = await request(app)
-    .post('/v1/users/login')
-    .send(userOneData);
-  token = response.body.token;
-});
 describe('Create one', () => {
+  let token;
+  beforeEach(async () => {
+    await User.create(userOneData);
+    const response = await request(app)
+      .post('/v1/users/login')
+      .send(userOneData);
+    token = response.body.token;
+  });
   test('Authenticated user can created a tweet ', async () => {
     const response = await request(app)
       .post(baseUrl)
       .set('Authorization', `Bearer ${token}`)
       .send(tweetOneData)
       .expect(200);
-    expect(response.tweet).not.toBeNull();
+    expect(response.body.tweet).not.toBeNull();
   });
 
   test('Unauthenticated user cannot created a tweet ', async () => {
@@ -41,6 +42,41 @@ describe('Create one', () => {
       .post(baseUrl)
       .send(tweetTwoData)
       .expect(401);
-    expect(response).not.toHaveProperty('tweet');
+    expect(response.body).not.toHaveProperty('tweet');
+  });
+});
+
+describe('Update one', () => {
+  let tweetOneId;
+  let tweetTwoId;
+  let token;
+  beforeEach(async () => {
+    const user = await User.create(userOneData);
+    const userTwo = await User.create(userTwoData);
+    const tweetTwo = await Tweet.create({ ...tweetTwoData, createdBy: userTwo._id });
+    tweetTwoId = tweetTwo._id;
+    const tweet = await Tweet.create({ ...tweetOneData, createdBy: user._id });
+    tweetOneId = tweet._id;
+    const response = await request(app)
+      .post('/v1/users/login')
+      .send(userOneData);
+    token = response.body.token;
+  });
+  test('User can update her own tweet', async () => {
+    const response = await request(app)
+      .patch(`${baseUrl}${tweetOneId}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(tweetTwoData)
+      .expect(200);
+    expect(response.body.tweet).not.toBeNull();
+    expect(response.body.tweet.content).toBe(tweetTwoData.content);
+  });
+
+  test('User cannot update tweet that is not hers', async () => {
+    await request(app)
+      .patch(`${baseUrl}${tweetTwoId}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(tweetOneData)
+      .expect(401);
   });
 });
