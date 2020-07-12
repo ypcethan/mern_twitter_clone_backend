@@ -7,7 +7,7 @@ const errorHandler = require('./middleware/errorHandler');
 const userRouter = require('./resources/user/user.route');
 
 const app = express();
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
   dotenv.config({ path: path.resolve(__dirname, 'config/dev.env') });
   app.use(logger('dev'));
 }

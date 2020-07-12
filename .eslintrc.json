@@ -11,5 +11,8 @@
         "ecmaVersion": 11
     },
     "rules": {
+        "func-names":"off",
+        "no-underscore-dangle":"off",
+        "no-undef":"off"
     }
 }
