@@ -8,6 +8,7 @@ exports.protect = async (req, res, next) => {
   if (authHeader && authHeader.startsWith('Bearer')) {
     token = authHeader.split(' ')[1];
   }
+
   if (!token) {
     next({ message: 'Not authorize for this route', statusCode: 401 });
   }

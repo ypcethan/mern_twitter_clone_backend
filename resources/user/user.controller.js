@@ -29,3 +29,22 @@ exports.login = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.updateOne = async (req, res, next) => {
+  try {
+    let user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(400).json({ success: false, message: 'User does not exist' });
+    }
+    if (req.user._id.toString() !== req.params.id) {
+      return res.status(401).json({ success: false, message: 'Not authorized to this route' });
+    }
+    user = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    next(error);
+  }
+};

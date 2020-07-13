@@ -55,3 +55,36 @@ describe('Login user', () => {
     expect(response.body).not.toHaveProperty('token');
   });
 });
+
+describe('Update user', () => {
+  let token;
+  let userOne;
+  beforeEach(async () => {
+    userOne = await User.create(userOneData);
+    const response = await request(app)
+      .post(`${baseUrl}/login`)
+      .send(userOneData);
+    token = response.body.token;
+  });
+  test('Should be able to update own profile', async () => {
+    const newData = { name: 'New name', email: 'newemail@gmail.com' };
+    await request(app)
+      .patch(`${baseUrl}/${userOne._id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(newData)
+      .expect(200);
+    const updatedUserOne = await User.findById(userOne._id);
+    expect(updatedUserOne.name).toBe(newData.name);
+    expect(updatedUserOne.email).toBe(newData.email);
+  });
+  test("Should not be able to update others' profile", async () => {
+    const newData = { name: 'New name', email: 'newemail@gmail.com' };
+    await request(app)
+      .patch(`${baseUrl}/${userOne._id}`)
+      .send(newData)
+      .expect(401);
+    const updatedUserOne = await User.findById(userOne._id);
+    expect(updatedUserOne.name).toBe(userOne.name);
+    expect(updatedUserOne.email).toBe(userOne.email);
+  });
+});
