@@ -2,6 +2,9 @@ const path = require('path');
 const express = require('express');
 const logger = require('morgan');
 const dotenv = require('dotenv');
+const multer = require('multer');
+const cors = require('cors');
+const { request } = require('express');
 const connectDB = require('./utils/db');
 const errorHandler = require('./middleware/errorHandler');
 const userRouter = require('./resources/user/user.route');
@@ -15,6 +18,8 @@ if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
 
 // Middleware
 app.use(express.json());
+app.use(cors());
+// app.use(multer().single());
 // Mounting router
 app.use('/v1/users', userRouter);
 app.use('/v1/tweets', tweetRouter);
