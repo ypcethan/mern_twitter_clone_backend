@@ -32,6 +32,10 @@ exports.login = async (req, res, next) => {
 
 exports.updateOne = async (req, res, next) => {
   try {
+    // console.log('REq');
+    // console.log(req.params);
+    console.log(req.file);
+    // console.log(req.body);
     let user = await User.findById(req.params.id);
     if (!user) {
       return res.status(400).json({ success: false, message: 'User does not exist' });
@@ -43,6 +47,8 @@ exports.updateOne = async (req, res, next) => {
       new: true,
       runValidators: true,
     });
+    user.avatar = req.file.path;
+    await user.save();
     res.status(200).json({ success: true, user });
   } catch (error) {
     next(error);

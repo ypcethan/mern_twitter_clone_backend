@@ -7,7 +7,7 @@ const userSchema = mongoose.Schema({
     type: String,
     required: [true, 'Please add a name'],
   },
-  username: {
+  userName: {
     type: String,
   },
   email: {
@@ -20,6 +20,9 @@ const userSchema = mongoose.Schema({
     required: [true, 'Please add a password'],
     minlength: 5,
     select: false,
+  },
+  avatar: {
+    type: String,
   },
 },
 { timestamps: true });
