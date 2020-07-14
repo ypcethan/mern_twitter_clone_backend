@@ -1,10 +1,28 @@
 const User = require('./user.model');
 
+// const validateUserNameAndEmail = async (req, res) => {
+//   let user = await User.findOne({ email: req.body.email });
+//   if (user) {
+//     return res.status(400).json({ sucess: false, message: 'Email is already been taken' });
+//   }
+//   console.log(user);
+//   console.log(req.body);
+//   user = await User.findOne({ userName: req.body.userName });
+//   console.log(user);
+//   if (user) {
+//     return res.status(400).json({ sucess: false, message: 'User name is already been taken' });
+//   }
+// };
 exports.register = async (req, res, next) => {
   try {
+    // await validateUserNameAndEmail(req, res);
     let user = await User.findOne({ email: req.body.email });
     if (user) {
       return res.status(400).json({ sucess: false, message: 'Email is already been taken' });
+    }
+    user = await User.findOne({ userName: req.body.userName });
+    if (user) {
+      return res.status(400).json({ sucess: false, message: 'User name is already been taken' });
     }
     user = await User.create(req.body);
     const token = user.getJwtToken();
@@ -32,10 +50,6 @@ exports.login = async (req, res, next) => {
 
 exports.updateOne = async (req, res, next) => {
   try {
-    // console.log('REq');
-    // console.log(req.params);
-    console.log(req.file);
-    // console.log(req.body);
     let user = await User.findById(req.params.id);
     if (!user) {
       return res.status(400).json({ success: false, message: 'User does not exist' });
@@ -47,8 +61,10 @@ exports.updateOne = async (req, res, next) => {
       new: true,
       runValidators: true,
     });
-    user.avatar = req.file.path;
-    await user.save();
+    if (req.file) {
+      user.avatar = req.file.path;
+      await user.save();
+    }
     res.status(200).json({ success: true, user });
   } catch (error) {
     next(error);

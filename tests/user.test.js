@@ -34,6 +34,14 @@ describe('Register', () => {
       .send(userOneData)
       .expect(400);
   });
+  test('Should not be able to register user if user name is already been taken', async () => {
+    await User.create(userOneData);
+    const response = await request(app)
+      .post(`${baseUrl}/register`)
+      .send({ ...userTwoData, userName: userOneData.userName })
+      .expect(400);
+    console.log(response.body);
+  });
 });
 
 describe('Login user', () => {

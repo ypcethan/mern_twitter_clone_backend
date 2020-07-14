@@ -1,20 +1,20 @@
 const userOneData = {
   name: 'ethan',
-  username: '@ethan',
+  userName: '@ethan',
   email: 'ethan@gmail.com',
   password: 'asdasdf',
 };
 
 const userTwoData = {
   name: 'userTwo',
-  username: '@usertwo',
+  userName: '@usertwo',
   email: 'two@gmail.com',
   password: 'asdasdf',
 };
 
 const userThreeData = {
   name: 'three',
-  username: '@three',
+  userName: '@three',
   email: 'three@gmail.com',
   password: 'asdasdf',
 };
