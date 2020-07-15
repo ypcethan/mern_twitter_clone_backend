@@ -1,7 +1,9 @@
 const Tweet = require('./tweet.model');
 const User = require('../user/user.model');
-const { tweetTwoData } = require('../../tests/fixture/tweet.fixture');
 
+// @desc      Get all tweets from a single user
+// @route     GET /v1/tweets/:userId/tweets/
+// @access    Public
 exports.getAllFromUser = async (req, res, next) => {
   try {
     const tweets = await Tweet.find({ createdBy: req.params.userId });
@@ -10,7 +12,9 @@ exports.getAllFromUser = async (req, res, next) => {
     next(error);
   }
 };
-
+// @desc      Create a single tweet
+// @route     POST /v1/tweets/
+// @access    Private
 exports.createOne = async (req, res, next) => {
   try {
     const tweet = await Tweet.create({ ...req.body, createdBy: req.user._id });
@@ -20,6 +24,9 @@ exports.createOne = async (req, res, next) => {
   }
 };
 
+// @desc      Get a single tweet by ID
+// @route     GET /v1/tweets/:id
+// @access    Public
 exports.getOne = async (req, res, next) => {
   try {
     const tweet = await Tweet.findById(req.params.id);
@@ -29,6 +36,9 @@ exports.getOne = async (req, res, next) => {
   }
 };
 
+// @desc      Update a single tweet by ID
+// @route     PATCH /v1/tweets/:id
+// @access    Private
 exports.updateOne = async (req, res, next) => {
   try {
     let tweet = await Tweet.findById(req.params.id);
@@ -48,6 +58,9 @@ exports.updateOne = async (req, res, next) => {
     next(error);
   }
 };
+// @desc      Delete a single tweet by ID
+// @route     Delete /v1/tweets/:id
+// @access    Private
 exports.deleteOne = async (req, res, next) => {
   try {
     let tweet = await Tweet.findById(req.params.id);
