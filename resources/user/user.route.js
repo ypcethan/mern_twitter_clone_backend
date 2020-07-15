@@ -1,7 +1,9 @@
 const express = require('express');
 const multer = require('multer');
 const { protect } = require('../../middleware/auth');
-const { register, login, updateOne } = require('./user.controller');
+const {
+  register, login, updateOne, getOne, getAuth,
+} = require('./user.controller');
 
 const router = express.Router();
 const storage = multer.diskStorage({
@@ -24,8 +26,11 @@ const upload = multer({
     return cb(null, true);
   },
 });
+
 router.post('/register', register);
 router.post('/login', login);
-router.patch('/:id', protect, upload.single('avatar'), updateOne);
+router.patch('/:id', protect, upload.any(), updateOne);
+router.get('/auth', protect, getAuth);
+router.get('/:userName', getOne);
 
 module.exports = router;

@@ -26,6 +26,9 @@ const userSchema = mongoose.Schema({
   avatar: {
     type: String,
   },
+  coverImage: {
+    type: String,
+  },
 },
 { timestamps: true });
 
@@ -46,7 +49,7 @@ userSchema.methods.matchPassword = async function (password) {
 userSchema.methods.getJwtToken = function () {
   const payload = { userId: this._id };
   const token = jwt.sign(payload, process.env.JWT_SECRECT, {
-    expiresIn: process.env.JWT_EXPIRE,
+    expiresIn: '1h',
   });
   return token;
 };
