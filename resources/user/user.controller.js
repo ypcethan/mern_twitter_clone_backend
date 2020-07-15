@@ -16,7 +16,8 @@ exports.register = async (req, res, next) => {
     }
     user = await User.create(req.body);
     const token = user.getJwtToken();
-    res.status(200).json({ sucess: true, user, token });
+    // res.status(200).json({ sucess: true, user, token });
+    res.status(200).json({ success: true, token, user: { ...user._doc, avatar: user.avatarUrl, coverImage: user.coverImageUrl } });
   } catch (error) {
     next(error);
   }
@@ -35,7 +36,8 @@ exports.login = async (req, res, next) => {
       return res.status(401).json({ success: false, message: 'Password does not match' });
     }
     const token = await user.getJwtToken();
-    return res.status(200).json({ success: true, token, user });
+    res.status(200).json({ success: true, token, user: { ...user._doc, avatar: user.avatarUrl, coverImage: user.coverImageUrl } });
+    // res.status(200).json({ success: true, token, user });
   } catch (error) {
     next(error);
   }
@@ -69,7 +71,8 @@ exports.updateOne = async (req, res, next) => {
       // user.avatar = req.file.path;
       await user.save();
     }
-    res.status(200).json({ success: true, user });
+
+    res.status(200).json({ success: true, user: { ...user._doc, avatar: user.avatarUrl, coverImage: user.coverImageUrl } });
   } catch (error) {
     next(error);
   }
@@ -85,7 +88,7 @@ exports.getOne = async (req, res, next) => {
     if (!user) {
       res.status(400).json({ success: false, message: 'User not found' });
     }
-    res.status(200).json({ success: true, user });
+    res.status(200).json({ success: true, user: { ...user._doc, avatar: user.avatarUrl, coverImage: user.coverImageUrl } });
   } catch (error) {
     next(error);
   }
@@ -97,7 +100,7 @@ exports.getOne = async (req, res, next) => {
 exports.getAuth = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id);
-    res.status(200).json({ user });
+    res.status(200).json({ success: true, user: { ...user._doc, avatar: user.avatarUrl, coverImage: user.coverImageUrl } });
   } catch (error) {
     next(error);
   }

@@ -32,18 +32,24 @@ const userSchema = mongoose.Schema({
 },
 { timestamps: true });
 
-userSchema.pre('save', function (next) {
-  console.log(this.avatar);
-  console.log(process.env.APP_URL);
-  if (this.avatar) {
-    this.avatar = process.env.APP_URL + this.avatar;
-    console.log(this.avatar);
-  }
-  if (this.coverImage) {
-    this.coverImage = process.env.APP_URL + this.coverImage;
-  }
-  next();
+userSchema.virtual('avatarUrl').get(function () {
+  return process.env.APP_URL + this.avatar;
 });
+userSchema.virtual('coverImageUrl').get(function () {
+  return process.env.APP_URL + this.coverImage;
+});
+// userSchema.pre('save', function (next) {
+//   console.log(this.avatar);
+//   console.log(process.env.APP_URL);
+//   if (this.avatar) {
+//     this.avatar = process.env.APP_URL + this.avatar;
+//     console.log(this.avatar);
+//   }
+//   if (this.coverImage) {
+//     this.coverImage = process.env.APP_URL + this.coverImage;
+//   }
+//   next();
+// });
 userSchema.pre('save', async function (next) {
   if (this.isModified('password')) {
     const salt = await bcrypt.genSalt();
