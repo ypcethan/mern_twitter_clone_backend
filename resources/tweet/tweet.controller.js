@@ -1,6 +1,20 @@
 const Tweet = require('./tweet.model');
 const User = require('../user/user.model');
 
+// @desc      Get all relevant tweets for authenticated user
+// @route     GET /v1/tweets/
+// @access    Private
+exports.getReleventTweets = async (req, res, next) => {
+  try {
+    const tweets = await Tweet.find({ createdBy: req.user._id }, null, { sort: '-updatedAt' }).populate({
+      path: 'createdBy',
+    });
+    console.log(tweets);
+    res.status(200).json({ success: true, tweets });
+  } catch (error) {
+    next(error);
+  }
+};
 // @desc      Get all tweets from a single user
 // @route     GET /v1/tweets/:userId/tweets/
 // @access    Public
