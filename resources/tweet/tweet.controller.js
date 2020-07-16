@@ -12,7 +12,6 @@ exports.getReleventTweets = async (req, res, next) => {
     const tweets = await Tweet.find(null, null, { sort: '-updatedAt' }).populate({
       path: 'createdBy',
     });
-    console.log(tweets);
     res.status(200).json({ success: true, tweets });
   } catch (error) {
     next(error);
@@ -34,7 +33,8 @@ exports.getAllFromUser = async (req, res, next) => {
 // @access    Private
 exports.createOne = async (req, res, next) => {
   try {
-    const tweet = await Tweet.create({ ...req.body, createdBy: req.user._id });
+    let tweet = await Tweet.create({ ...req.body, createdBy: req.user._id });
+    tweet = await tweet.populate('createdBy').execPopulate();
     res.status(200).json({ success: true, tweet });
   } catch (error) {
     next(error);
