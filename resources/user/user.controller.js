@@ -29,6 +29,7 @@ exports.register = async (req, res, next) => {
 exports.login = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email }).select('+password');
+    console.log(user);
     if (!user) {
       return res.status(400).json({ success: false, message: 'User does not exist with that email' });
     }
@@ -36,6 +37,7 @@ exports.login = async (req, res, next) => {
       return res.status(401).json({ success: false, message: 'Password does not match' });
     }
     const token = await user.getJwtToken();
+    console.log(token);
     res.status(200).json({ success: true, token, user });
   } catch (error) {
     next(error);

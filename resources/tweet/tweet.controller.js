@@ -6,7 +6,10 @@ const User = require('../user/user.model');
 // @access    Private
 exports.getReleventTweets = async (req, res, next) => {
   try {
-    const tweets = await Tweet.find({ createdBy: req.user._id }, null, { sort: '-updatedAt' }).populate({
+    // const tweets = await Tweet.find({ createdBy: req.user._id }, null, { sort: '-updatedAt' }).populate({
+    //   path: 'createdBy',
+    // });
+    const tweets = await Tweet.find(null, null, { sort: '-updatedAt' }).populate({
       path: 'createdBy',
     });
     console.log(tweets);
