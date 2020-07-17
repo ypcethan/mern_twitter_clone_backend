@@ -102,12 +102,12 @@ describe('Can add comment to a tweet', () => {
     const commentData = {
       content: 'new comment',
     };
-    await request(app)
+    let response = await request(app)
       .post(`${baseUrl}${tweetTwoId}/comments`)
       .set('Authorization', `Bearer ${token}`)
       .send(commentData)
       .expect(200);
-    const response = await request(app)
+    response = await request(app)
       .get(`${baseUrl}${tweetTwoId}/comments`)
       .expect(200);
     const comment = response.body.comments[0];

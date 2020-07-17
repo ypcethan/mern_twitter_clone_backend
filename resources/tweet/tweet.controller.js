@@ -100,15 +100,21 @@ exports.deleteOne = async (req, res, next) => {
 // @access    Private
 exports.createComment = async (req, res, next) => {
   try {
-    const tweet = await Tweet.findById(req.params.id);
+    let tweet = await Tweet.findById(req.params.id);
+
     if (!tweet) {
       return res.status(404).json({ success: false, message: 'Tweet with given id does not exist' });
     }
     const newComment = { content: req.body.content, createdBy: req.user._id };
     tweet.comments.push(newComment);
     await tweet.save();
+    tweet = await tweet.populate({
+      path: 'comments',
+      populate: { path: 'createdBy' },
+    }).execPopulate();
 
-    res.status(200).json({ success: true, tweet });
+    console.log(tweet);
+    res.status(200).json({ success: true, comment: tweet.comments[tweet.comments.length - 1] });
   } catch (error) {
     next(error);
   }
@@ -119,11 +125,13 @@ exports.createComment = async (req, res, next) => {
 // @access    Public
 exports.getAllComments = async (req, res, next) => {
   try {
-    const tweet = await Tweet.findById(req.params.id);
+    const tweet = await Tweet.findById(req.params.id).populate({
+      path: 'comments',
+      populate: { path: 'createdBy' },
+    });
     if (!tweet) {
       return res.status(404).json({ success: false, message: 'Tweet with given id does not exist' });
     }
-
     res.status(200).json({ success: true, comments: tweet.comments });
   } catch (error) {
     next(error);
