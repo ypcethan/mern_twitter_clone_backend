@@ -12,6 +12,7 @@ const commentSchema = mongoose.Schema({
 },
 { timestamps: true });
 const tweetSchema = mongoose.Schema({
+
   content: {
     type: String,
     required: true,
@@ -22,6 +23,12 @@ const tweetSchema = mongoose.Schema({
   },
   comments: [
     commentSchema,
+  ],
+  likes: [
+    {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: 'User',
+    },
   ],
 },
 { timestamps: true });

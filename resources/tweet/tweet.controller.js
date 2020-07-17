@@ -9,7 +9,7 @@ exports.getReleventTweets = async (req, res, next) => {
     // const tweets = await Tweet.find({ createdBy: req.user._id }, null, { sort: '-updatedAt' }).populate({
     //   path: 'createdBy',
     // });
-    const tweets = await Tweet.find(null, null, { sort: '-updatedAt' }).populate({
+    const tweets = await Tweet.find(null, null, { sort: '-createdAt' }).populate({
       path: 'createdBy',
     });
     res.status(200).json({ success: true, tweets });
@@ -113,8 +113,7 @@ exports.createComment = async (req, res, next) => {
       populate: { path: 'createdBy' },
     }).execPopulate();
 
-    console.log(tweet);
-    res.status(200).json({ success: true, comment: tweet.comments[tweet.comments.length - 1] });
+    res.status(200).json({ success: true, count: tweet.comments.length, comment: tweet.comments[tweet.comments.length - 1] });
   } catch (error) {
     next(error);
   }
@@ -133,6 +132,43 @@ exports.getAllComments = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Tweet with given id does not exist' });
     }
     res.status(200).json({ success: true, comments: tweet.comments });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc      Get all comments
+// @route     GET /v1/tweets/user/:userId/comments
+// @access    Public
+exports.getAllUserComments = async (req, res, next) => {
+  try {
+    const tweets = await Tweet.find({ 'comments.createdBy': req.params.userId }).populate({
+      path: 'comments createdBy',
+      populate: { path: 'createdBy' },
+    });
+    if (!tweets) {
+      return res.status(404).json({ success: false, message: 'Tweet with given id does not exist' });
+    }
+    res.status(200).json({ success: true, tweets });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc      User can like a tweet
+// @route     POST /v1/tweets/:id/likes
+// @access    Private
+exports.createLike = async (req, res, next) => {
+  try {
+    const tweet = await Tweet.findById(req.params.id);
+
+    if (!tweet) {
+      return res.status(404).json({ success: false, message: 'Tweet with given id does not exist' });
+    }
+    tweet.likes.push(req.user._id);
+    await tweet.save();
+
+    res.status(200).json({ success: true, comment: tweet.comments[tweet.comments.length - 1] });
   } catch (error) {
     next(error);
   }

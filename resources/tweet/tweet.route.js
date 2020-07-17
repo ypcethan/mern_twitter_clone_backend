@@ -1,7 +1,7 @@
 const express = require('express');
 const {
   getAllFromUser, createOne, getOne, updateOne, deleteOne, getReleventTweets,
-  createComment, getAllComments,
+  createComment, getAllComments, createLike, getAllUserComments,
 } = require('./tweet.controller');
 const { protect } = require('../../middleware/auth');
 
@@ -17,4 +17,6 @@ router.patch('/:id', protect, updateOne);
 router.delete('/:id', protect, deleteOne);
 router.post('/:id/comments', protect, createComment);
 router.get('/:id/comments', getAllComments);
+router.post('/:id/likes', protect, createLike);
+router.get('/user/:userId/comments', getAllUserComments);
 module.exports = router;
