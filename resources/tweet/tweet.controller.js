@@ -22,7 +22,7 @@ exports.getReleventTweets = async (req, res, next) => {
 // @access    Public
 exports.getAllFromUser = async (req, res, next) => {
   try {
-    const tweets = await Tweet.find({ createdBy: req.params.userId });
+    const tweets = await Tweet.find({ createdBy: req.params.userId }, null, { sort: '-updatedAt' }).populate('createdBy');
     res.status(200).json({ success: true, tweets });
   } catch (error) {
     next(error);
@@ -46,7 +46,8 @@ exports.createOne = async (req, res, next) => {
 // @access    Public
 exports.getOne = async (req, res, next) => {
   try {
-    const tweet = await Tweet.findById(req.params.id);
+    let tweet = await Tweet.findById(req.params.id);
+    tweet = await tweet.populate('createdBy').execPopulate();
     res.status(200).json({ success: true, tweet });
   } catch (error) {
     next(error);
@@ -89,6 +90,41 @@ exports.deleteOne = async (req, res, next) => {
     }
     tweet = await Tweet.findByIdAndRemove(req.params.id);
     res.status(200).json({ success: true, tweet });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc      Adding comment to a tweet
+// @route     POST /v1/tweets/:id/comment
+// @access    Private
+exports.createComment = async (req, res, next) => {
+  try {
+    const tweet = await Tweet.findById(req.params.id);
+    if (!tweet) {
+      return res.status(404).json({ success: false, message: 'Tweet with given id does not exist' });
+    }
+    const newComment = { content: req.body.content, createdBy: req.user._id };
+    tweet.comments.push(newComment);
+    await tweet.save();
+
+    res.status(200).json({ success: true, tweet });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc      Get all comments on a tweet
+// @route     GET /v1/tweets/:id/comment
+// @access    Public
+exports.getAllComments = async (req, res, next) => {
+  try {
+    const tweet = await Tweet.findById(req.params.id);
+    if (!tweet) {
+      return res.status(404).json({ success: false, message: 'Tweet with given id does not exist' });
+    }
+
+    res.status(200).json({ success: true, comments: tweet.comments });
   } catch (error) {
     next(error);
   }

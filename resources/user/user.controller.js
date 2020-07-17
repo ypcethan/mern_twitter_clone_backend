@@ -36,7 +36,6 @@ exports.login = async (req, res, next) => {
       return res.status(401).json({ success: false, message: 'Password does not match' });
     }
     const token = await user.getJwtToken();
-    console.log(token);
     res.status(200).json({ success: true, token, user });
   } catch (error) {
     next(error);
@@ -60,7 +59,7 @@ exports.updateOne = async (req, res, next) => {
       runValidators: true,
     });
     // Update any uploaded files
-    if (req.files.length > 0) {
+    if (req.files && req.files.length > 0) {
       req.files.forEach((file) => {
         if (file.fieldname === 'coverImage') {
           user.coverImage = file.path;
@@ -83,7 +82,6 @@ exports.updateOne = async (req, res, next) => {
 // @access    Public
 exports.getOne = async (req, res, next) => {
   try {
-    console.log(req.params);
     const user = await User.findOne({ userName: req.params.userName });
     if (!user) {
       res.status(400).json({ success: false, message: 'User not found' });

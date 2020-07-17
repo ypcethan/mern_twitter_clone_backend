@@ -80,3 +80,38 @@ describe('Update one', () => {
       .expect(401);
   });
 });
+
+describe('Can add comment to a tweet', () => {
+  let tweetOneId;
+  let tweetTwoId;
+  let token;
+  let user;
+  beforeEach(async () => {
+    user = await User.create(userOneData);
+    const userTwo = await User.create(userTwoData);
+    const tweetTwo = await Tweet.create({ ...tweetTwoData, createdBy: userTwo._id });
+    tweetTwoId = tweetTwo._id;
+    const tweet = await Tweet.create({ ...tweetOneData, createdBy: user._id });
+    tweetOneId = tweet._id;
+    const response = await request(app)
+      .post('/v1/users/login')
+      .send(userOneData);
+    token = response.body.token;
+  });
+  test('Can add comment to a tweet', async () => {
+    const commentData = {
+      content: 'new comment',
+    };
+    await request(app)
+      .post(`${baseUrl}${tweetTwoId}/comments`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(commentData)
+      .expect(200);
+    const response = await request(app)
+      .get(`${baseUrl}${tweetTwoId}/comments`)
+      .expect(200);
+    const comment = response.body.comments[0];
+    expect(comment.content).toBe(commentData.content);
+    expect(comment.createdBy.toString()).toBe(user._id.toString());
+  });
+});
