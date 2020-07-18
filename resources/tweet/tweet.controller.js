@@ -165,10 +165,40 @@ exports.createLike = async (req, res, next) => {
     if (!tweet) {
       return res.status(404).json({ success: false, message: 'Tweet with given id does not exist' });
     }
+    if (req.user.likedTweets.includes(tweet._id)) {
+      tweet.likes = tweet.likes.filter((id) => id.toString() !== req.user._id.toString());
+      await tweet.save();
+      req.user.likedTweets = req.user.likedTweets.filter((id) => id.toString() !== tweet._id.toString());
+      await req.user.save();
+      return res.status(200).json({ success: true, tweet, count: tweet.likes.length });
+    }
     tweet.likes.push(req.user._id);
     await tweet.save();
+    req.user.likedTweets.push(tweet._id);
+    await req.user.save();
 
-    res.status(200).json({ success: true, comment: tweet.comments[tweet.comments.length - 1] });
+    res.status(200).json({ success: true, tweet, count: tweet.likes.length });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc      Get all tweets
+// @route     GET /v1/tweets/user/:userId/likes
+// @access    Public
+exports.getAllUserLikes = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.userId).populate({
+      path: 'likedTweets',
+      populate: { path: 'createdBy' },
+    });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User with given id does not exist' });
+    }
+
+    console.log(user);
+    res.status(200).json({ success: true, tweets: user.likedTweets });
   } catch (error) {
     next(error);
   }

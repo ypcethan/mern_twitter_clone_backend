@@ -29,6 +29,12 @@ const userSchema = mongoose.Schema({
   coverImage: {
     type: String,
   },
+  likedTweets: [
+    {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: 'Tweet',
+    },
+  ],
 },
 {
   timestamps: true,
