@@ -1,9 +1,9 @@
 const express = require('express');
 const multer = require('multer');
-const { protect } = require('../../middleware/auth');
+const { protect } = require('../middleware/auth');
 const {
   register, login, updateOne, getOne, getAuth,
-} = require('./user.controller');
+} = require('../controllers/user.controller');
 
 const router = express.Router();
 const storage = multer.diskStorage({

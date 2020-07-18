@@ -5,8 +5,8 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./utils/db');
 const errorHandler = require('./middleware/errorHandler');
-const userRouter = require('./resources/user/user.route');
-const tweetRouter = require('./resources/tweet/tweet.route');
+const userRouter = require('./routes/user.route');
+const tweetRouter = require('./routes/tweet.route');
 
 const app = express();
 if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {

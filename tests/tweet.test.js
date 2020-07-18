@@ -1,7 +1,7 @@
 const request = require('supertest');
 const { app } = require('../server');
-const User = require('../resources/user/user.model');
-const Tweet = require('../resources/tweet/tweet.model');
+const User = require('../models/user.model');
+const Tweet = require('../models/tweet.model');
 const { connect, clearDatabase, closeDatabase } = require('./test-db-setup');
 
 const { userOneData, userTwoData } = require('./fixture/user.fixture');

@@ -1,6 +1,6 @@
 const request = require('supertest');
 const { app } = require('../server');
-const User = require('../resources/user/user.model');
+const User = require('../models/user.model');
 const { connect, clearDatabase, closeDatabase } = require('./test-db-setup');
 
 const { userOneData, userTwoData } = require('./fixture/user.fixture');
@@ -40,7 +40,6 @@ describe('Register', () => {
       .post(`${baseUrl}/register`)
       .send({ ...userTwoData, userName: userOneData.userName })
       .expect(400);
-    console.log(response.body);
   });
 });
 
