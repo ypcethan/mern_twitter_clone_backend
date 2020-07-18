@@ -1,5 +1,5 @@
-const Tweet = require('./tweet.model');
-const User = require('../user/user.model');
+const Tweet = require('../models/tweet.model');
+const User = require('../models/user.model');
 
 // @desc      Get all relevant tweets for authenticated user
 // @route     GET /v1/tweets/

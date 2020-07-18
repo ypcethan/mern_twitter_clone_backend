@@ -2,8 +2,8 @@ const express = require('express');
 const {
   getAllFromUser, createOne, getOne, updateOne, deleteOne, getReleventTweets,
   createComment, getAllComments, createLike, getAllUserComments, getAllUserLikes,
-} = require('./tweet.controller');
-const { protect } = require('../../middleware/auth');
+} = require('../controllers/tweet.controller');
+const { protect } = require('../middleware/auth');
 
 const router = express.Router();
 
