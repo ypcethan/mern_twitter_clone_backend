@@ -72,6 +72,14 @@ userSchema.pre('save', async function (next) {
   }
 });
 
+userSchema.methods.toggleLike = async function (tweetId) {
+  if (this.likedTweets.includes(tweetId)) {
+    this.likedTweets = this.likedTweets.filter((id) => id.toString() !== tweetId._id.toString());
+  } else {
+    this.likedTweets.push(tweetId);
+  }
+  await this.save();
+};
 userSchema.methods.matchPassword = async function (password) {
   const isMatch = await bcrypt.compare(password, this.password);
   return isMatch;

@@ -112,6 +112,5 @@ describe('Can add comment to a tweet', () => {
       .expect(200);
     const comment = response.body.comments[0];
     expect(comment.content).toBe(commentData.content);
-    expect(comment.createdBy.toString()).toBe(user._id.toString());
   });
 });

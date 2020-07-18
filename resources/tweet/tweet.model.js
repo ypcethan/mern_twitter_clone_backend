@@ -11,8 +11,8 @@ const commentSchema = mongoose.Schema({
   },
 },
 { timestamps: true });
-const tweetSchema = mongoose.Schema({
 
+const tweetSchema = mongoose.Schema({
   content: {
     type: String,
     required: true,
@@ -24,7 +24,7 @@ const tweetSchema = mongoose.Schema({
   comments: [
     commentSchema,
   ],
-  likes: [
+  likedBy: [
     {
       type: mongoose.SchemaTypes.ObjectId,
       ref: 'User',
@@ -33,4 +33,15 @@ const tweetSchema = mongoose.Schema({
 },
 { timestamps: true });
 
+tweetSchema.methods.toggleLikedBy = async function (userId) {
+  console.log('User id');
+  console.log(userId);
+  if (this.likedBy.includes(userId)) {
+    this.likedBy = this.likedBy.filter((id) => id.toString() !== userId.toString());
+  } else {
+    console.log('Add like');
+    this.likedBy.push(userId);
+  }
+  await this.save();
+};
 module.exports = mongoose.model('Tweet', tweetSchema);

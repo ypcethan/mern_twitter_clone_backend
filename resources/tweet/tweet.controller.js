@@ -165,19 +165,22 @@ exports.createLike = async (req, res, next) => {
     if (!tweet) {
       return res.status(404).json({ success: false, message: 'Tweet with given id does not exist' });
     }
-    if (req.user.likedTweets.includes(tweet._id)) {
-      tweet.likes = tweet.likes.filter((id) => id.toString() !== req.user._id.toString());
-      await tweet.save();
-      req.user.likedTweets = req.user.likedTweets.filter((id) => id.toString() !== tweet._id.toString());
-      await req.user.save();
-      return res.status(200).json({ success: true, tweet, count: tweet.likes.length });
-    }
-    tweet.likes.push(req.user._id);
-    await tweet.save();
-    req.user.likedTweets.push(tweet._id);
-    await req.user.save();
+    // if (req.user.likedTweets.includes(tweet._id)) {
+    //   tweet.likes = tweet.likes.filter((id) => id.toString() !== req.user._id.toString());
+    //   await tweet.save();
+    //   req.user.likedTweets = req.user.likedTweets.filter((id) => id.toString() !== tweet._id.toString());
+    //   await req.user.save();
+    //   return res.status(200).json({ success: true, tweet, count: tweet.likes.length });
+    // }
+    // tweet.likes.push(req.user._id);
+    // await tweet.save();
+    // req.user.likedTweets.push(tweet._id);
+    // await req.user.save();
 
-    res.status(200).json({ success: true, tweet, count: tweet.likes.length });
+    await tweet.toggleLikedBy(req.user._id);
+    await req.user.toggleLike(tweet._id);
+
+    res.status(200).json({ success: true, tweet, count: tweet.likedBy.length });
   } catch (error) {
     next(error);
   }
@@ -197,7 +200,6 @@ exports.getAllUserLikes = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'User with given id does not exist' });
     }
 
-    console.log(user);
     res.status(200).json({ success: true, tweets: user.likedTweets });
   } catch (error) {
     next(error);
