@@ -6,8 +6,8 @@ const dotenv = require('dotenv');
 dotenv.config({ path: './config/dev.env' });
 
 // Load models
-const Tweet = require('./resources/tweet/tweet.model');
-const User = require('./resources/user/user.model');
+const Tweet = require('./models/tweet.model');
+const User = require('./models/user.model');
 
 // Connect to DB
 mongoose.connect(process.env.MONGO_URI, {

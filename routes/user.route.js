@@ -3,6 +3,7 @@ const multer = require('multer');
 const { protect } = require('../middleware/auth');
 const {
   register, login, updateOne, getOne, getAuth,
+  getFollowedUsers,
 } = require('../controllers/user.controller');
 
 const router = express.Router();
@@ -31,6 +32,7 @@ router.post('/register', register);
 router.post('/login', login);
 router.patch('/:id', protect, upload.any(), updateOne);
 router.get('/auth', protect, getAuth);
+router.get('/followed', protect, getFollowedUsers);
 router.get('/:userName', getOne);
 
 module.exports = router;

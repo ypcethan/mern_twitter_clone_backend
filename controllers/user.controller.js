@@ -103,3 +103,15 @@ exports.getAuth = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc      Get list of followed user
+// @route     GET /v1/users/followed
+// @access    Private
+exports.getFollowedUsers = async (req, res, next) => {
+  try {
+    const users = await User.find({});
+    res.status(200).json({ success: true, users });
+  } catch (error) {
+    next(error);
+  }
+};
