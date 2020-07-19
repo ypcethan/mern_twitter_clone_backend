@@ -41,24 +41,30 @@ io.on('connection', (socket) => {
     socket.join(room);
     socket.emit('message', { text: `${name} , welcome to room ${room}` });
     socket.broadcast.to(room).emit('message', { text: `${name} has joined` });
-    const chat = await Chat.findOne({ roomId: room });
+    const chat = await Chat.findOne({ room });
     console.log('chat');
     console.log(chat);
     if (!chat) {
-      await Chat.create({ roomId: room });
+      await Chat.create({ room });
+    } else {
+      socket.emit('message', chat.history);
     }
     callback();
   });
 
   socket.on('sendMessage', async (data) => {
     console.log(data);
-    const { content, createdBy } = data;
-    const chat = await Chat.findOne({ roomId: data.room });
+    const {
+      content, createdBy, room, userName,
+    } = data;
+    const chat = await Chat.findOne({ room });
     chat.history.push({
-      content, createdBy,
+      content,
+      createdBy,
+      userName,
     });
     await chat.save();
-    io.in(data.room).emit('message', { user: data.name, text: data.content });
+    io.in(room).emit('message', { userName, content });
   });
 
   socket.on('disconnect', () => {

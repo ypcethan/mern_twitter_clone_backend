@@ -8,9 +8,12 @@ const responseSchema = mongoose.Schema({
     type: mongoose.Types.ObjectId,
     ref: 'User',
   },
+  userName: {
+    type: String,
+  },
 });
 const chatSchema = mongoose.Schema({
-  roomId: {
+  room: {
     type: String,
     required: true,
   },
