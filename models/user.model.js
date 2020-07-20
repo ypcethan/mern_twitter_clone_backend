@@ -35,6 +35,18 @@ const userSchema = mongoose.Schema({
       ref: 'Tweet',
     },
   ],
+  follows: [
+    {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: 'User',
+    },
+  ],
+  followedBy: [
+    {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: 'User',
+    },
+  ],
 },
 {
   timestamps: true,
@@ -80,6 +92,28 @@ userSchema.methods.toggleLike = async function (tweetId) {
   }
   await this.save();
 };
+
+userSchema.methods.toggleFollow = async function (userId) {
+  let action;
+  if (this.follows.includes(userId)) {
+    this.follows = this.follows.filter((user) => user._id.toString() !== userId.toString());
+    action = 'unfollow';
+  } else {
+    this.follows.push(userId);
+    action = 'follow';
+  }
+  await this.save();
+  return action;
+};
+userSchema.methods.toggleFollowedBy = async function (userId) {
+  if (this.followedBy.includes(userId)) {
+    this.followedBy = this.followedBy.filter((user) => user._id.toString() !== userId.toString());
+  } else {
+    this.followedBy.push(userId);
+  }
+  await this.save();
+};
+
 userSchema.methods.matchPassword = async function (password) {
   const isMatch = await bcrypt.compare(password, this.password);
   return isMatch;

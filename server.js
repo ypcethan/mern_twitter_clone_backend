@@ -37,13 +37,8 @@ const server = http.createServer(app);
 const io = socketIO(server, { origins: '*:*' });
 io.on('connection', (socket) => {
   socket.on('join', async ({ name, room }, callback) => {
-    console.log(`${name} , ${room}`);
     socket.join(room);
-    socket.emit('message', { text: `${name} , welcome to room ${room}` });
-    socket.broadcast.to(room).emit('message', { text: `${name} has joined` });
     const chat = await Chat.findOne({ room });
-    console.log('chat');
-    console.log(chat);
     if (!chat) {
       await Chat.create({ room });
     } else {
@@ -53,23 +48,22 @@ io.on('connection', (socket) => {
   });
 
   socket.on('sendMessage', async (data) => {
-    console.log(data);
     const {
       content, createdBy, room, userName,
     } = data;
-    const chat = await Chat.findOne({ room });
+    let chat = await Chat.findOne({ room });
     chat.history.push({
       content,
       createdBy,
       userName,
     });
-    await chat.save();
-    io.in(room).emit('message', { userName, content });
+    chat = await chat.save();
+    io.in(room).emit('message', { ...chat.history[chat.history.length - 1]._doc });
   });
 
-  socket.on('disconnect', () => {
-    console.log('A user has left');
-  });
+  // socket.on('disconnect', () => {
+  //   console.log('A user has left');
+  // });
 });
 
 const start = async () => {

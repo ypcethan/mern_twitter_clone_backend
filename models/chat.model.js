@@ -11,6 +11,10 @@ const responseSchema = mongoose.Schema({
   userName: {
     type: String,
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 const chatSchema = mongoose.Schema({
   room: {
@@ -20,6 +24,10 @@ const chatSchema = mongoose.Schema({
   history: [
     responseSchema,
   ],
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 module.exports = mongoose.model('Chat', chatSchema);

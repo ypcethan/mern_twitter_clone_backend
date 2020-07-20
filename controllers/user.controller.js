@@ -109,8 +109,30 @@ exports.getAuth = async (req, res, next) => {
 // @access    Private
 exports.getFollowedUsers = async (req, res, next) => {
   try {
-    const users = await User.find({});
-    res.status(200).json({ success: true, users });
+    // const users = await User.find({req.user.followsgcc});
+    const authUser = await req.user.populate('follows').execPopulate();
+    console.log('Get Follows user');
+    const followedUsers = authUser.follows;
+    console.log(followedUsers);
+    res.status(200).json({ success: true, users: followedUsers });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc      Create a follow record
+// @route     POST /v1/users/followed/:otherUserId
+// @access    Private
+exports.createFollow = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.otherUserId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User with given id does not exist' });
+    }
+
+    await user.toggleFollowedBy(req.user._id);
+    const action = await req.user.toggleFollow(user._id);
+    res.json({ success: true, count: user.followedBy.length, action });
   } catch (error) {
     next(error);
   }
