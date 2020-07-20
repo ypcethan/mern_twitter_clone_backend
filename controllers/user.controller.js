@@ -111,9 +111,7 @@ exports.getFollowedUsers = async (req, res, next) => {
   try {
     // const users = await User.find({req.user.followsgcc});
     const authUser = await req.user.populate('follows').execPopulate();
-    console.log('Get Follows user');
     const followedUsers = authUser.follows;
-    console.log(followedUsers);
     res.status(200).json({ success: true, users: followedUsers });
   } catch (error) {
     next(error);
