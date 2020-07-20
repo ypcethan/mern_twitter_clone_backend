@@ -20,9 +20,12 @@ const app = express();
 if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
   dotenv.config({ path: path.resolve(__dirname, 'config/dev.env') });
   app.use(logger('dev'));
+} else {
+  dotenv.config({ path: path.resolve(__dirname, 'config/prod.env') });
 }
 // Middleware
 
+app.use(cors());
 // Sanitize data
 app.use(mongoSanitize());
 
@@ -44,13 +47,12 @@ app.use(hpp());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));
-app.use(cors());
 
 // Mounting router
-app.use('/v1/users', userRouter);
-app.use('/v1/tweets', tweetRouter);
+app.use('/twitter/v1/users', userRouter);
+app.use('/twitter/v1/tweets', tweetRouter);
 
-app.get('/', (req, res) => {
+app.get('/twitter', (req, res) => {
   res.json('Hello');
 });
 

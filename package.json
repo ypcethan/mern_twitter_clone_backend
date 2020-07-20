@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "NODE_ENV=development nodemon index.js",
-    "test": "NODE_ENV=test jest ./tests/* --watch --runInBand"
+    "test": "NODE_ENV=test jest ./tests/* --watch --runInBand",
+    "start": "NODE_ENV=production node index.js"
   },
   "jest": {
     "testEnvironment": "node"
