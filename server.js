@@ -36,7 +36,7 @@ const PORT = process.env.PORT || 5000;
 const server = http.createServer(app);
 const io = socketIO(server, { origins: '*:*' });
 io.on('connection', (socket) => {
-  socket.on('join', async ({ name, room }, callback) => {
+  socket.on('join', async ({ room }, callback) => {
     socket.join(room);
     const chat = await Chat.findOne({ room });
     if (!chat) {
