@@ -10,6 +10,7 @@ const helmet = require('helmet');
 const xss = require('xss-clean');
 const rateLimit = require('express-rate-limit');
 const hpp = require('hpp');
+const aws = require('aws-sdk');
 const connectDB = require('./utils/db');
 const errorHandler = require('./middleware/errorHandler');
 const userRouter = require('./routes/user.route');
@@ -24,6 +25,12 @@ if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
   dotenv.config({ path: path.resolve(__dirname, 'config/prod.env') });
   app.use(logger('combined'));
 }
+
+aws.config.update({
+  secretAccessKey: process.env.S3_ACCESS_SECRET,
+  accessKeyId: process.env.S3_ACCESS_KEY,
+  region: 'ap-southeast-1',
+});
 // Middleware
 
 app.use(cors());

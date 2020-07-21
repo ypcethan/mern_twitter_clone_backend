@@ -62,9 +62,11 @@ exports.updateOne = async (req, res, next) => {
     if (req.files && req.files.length > 0) {
       req.files.forEach((file) => {
         if (file.fieldname === 'coverImage') {
-          user.coverImage = file.path;
+          // user.coverImage = file.path;
+          user.coverImage = file.location;
         } else if (file.fieldname === 'avatar') {
-          user.avatar = file.path;
+          // user.avatar = file.path;
+          user.avatar = file.location;
         }
       });
       // user.avatar = req.file.path;
@@ -87,6 +89,35 @@ exports.getOne = async (req, res, next) => {
       res.status(400).json({ success: false, message: 'User not found' });
     }
     res.status(200).json({ success: true, user });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc      Get all users
+// @route     GET /v1/users/
+// @access    Public
+exports.getMany = async (req, res, next) => {
+  try {
+    const users = await User.find({});
+    if (!users) {
+      res.status(400).json({ success: false, message: 'User not found' });
+    }
+    res.status(200).json({ success: true, users });
+  } catch (error) {
+    next(error);
+  }
+};
+// @desc      Get all users
+// @route     GET /v1/users/:userId/recommanded
+// @access    Public
+exports.getRecommandedToFollow = async (req, res, next) => {
+  try {
+    const users = await User.find({ _id: { $nin: [req.user._id, ...req.user.follows] } }).limit(3);
+    if (!users) {
+      res.status(400).json({ success: false, message: 'Users not found' });
+    }
+    res.status(200).json({ success: true, users });
   } catch (error) {
     next(error);
   }

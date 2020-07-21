@@ -61,8 +61,9 @@ userSchema.virtual('avatarUrl').get(function () {
   if (this.avatar.startsWith('http')) {
     return this.avatar;
   }
+  return this.avatar;
 
-  return `${process.env.APP_URL}/${this.avatar}`;
+  // return `${process.env.APP_URL}/${this.avatar}`;
 });
 userSchema.virtual('coverImageUrl').get(function () {
   if (!this.coverImage) {
@@ -71,8 +72,9 @@ userSchema.virtual('coverImageUrl').get(function () {
   if (this.coverImage.startsWith('http')) {
     return this.coverImage;
   }
+  return this.avatar;
 
-  return `${process.env.APP_URL}/${this.coverImage}`;
+  // return `${process.env.APP_URL}/${this.coverImage}`;
 });
 
 userSchema.pre('save', async function (next) {
