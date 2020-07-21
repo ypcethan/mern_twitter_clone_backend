@@ -9,8 +9,11 @@ const commentSchema = mongoose.Schema({
     type: mongoose.SchemaTypes.ObjectId,
     ref: 'User',
   },
-},
-{ timestamps: true });
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
 const tweetSchema = mongoose.Schema({
   content: {
@@ -30,8 +33,11 @@ const tweetSchema = mongoose.Schema({
       ref: 'User',
     },
   ],
-},
-{ timestamps: true });
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
 tweetSchema.methods.toggleLikedBy = async function (userId) {
   if (this.likedBy.includes(userId)) {

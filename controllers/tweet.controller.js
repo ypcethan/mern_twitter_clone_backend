@@ -22,7 +22,7 @@ exports.getReleventTweets = async (req, res, next) => {
 // @access    Public
 exports.getAllFromUser = async (req, res, next) => {
   try {
-    const tweets = await Tweet.find({ createdBy: req.params.userId }, null, { sort: '-updatedAt' }).populate('createdBy');
+    const tweets = await Tweet.find({ createdBy: req.params.userId }, null, { sort: '-createdAt' }).populate('createdBy');
     res.status(200).json({ success: true, tweets });
   } catch (error) {
     next(error);
