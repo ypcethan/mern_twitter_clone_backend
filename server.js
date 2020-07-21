@@ -22,6 +22,7 @@ if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
   app.use(logger('dev'));
 } else {
   dotenv.config({ path: path.resolve(__dirname, 'config/prod.env') });
+  app.use(logger('combined'));
 }
 // Middleware
 
