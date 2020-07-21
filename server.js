@@ -1,6 +1,5 @@
 const path = require('path');
 const http = require('http');
-const https = require('https');
 const socketIO = require('socket.io');
 const express = require('express');
 const logger = require('morgan');
@@ -67,17 +66,8 @@ app.get('/twitter', (req, res) => {
 
 app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
-let server;
-if (process.env.NODE_ENV === 'production') {
-  const options = {
-    key: fs.readFileSync(process.env.SERVER_KEY),
-    cert: fs.readFileSync(process.env.SERVER_CERT),
-  };
-  server = https.createServer(options, app);
-} else {
-  server = http.createServer(app);
-}
-const io = socketIO(server, { origins: '*:*' });
+const server = http.createServer(app);
+const io = socketIO(server, { origins: '*:*', path: '/twitter/socket' });
 io.on('connection', (socket) => {
   socket.on('join', async ({ room }, callback) => {
     socket.join(room);
