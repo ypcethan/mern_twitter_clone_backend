@@ -34,12 +34,9 @@ const tweetSchema = mongoose.Schema({
 { timestamps: true });
 
 tweetSchema.methods.toggleLikedBy = async function (userId) {
-  console.log('User id');
-  console.log(userId);
   if (this.likedBy.includes(userId)) {
     this.likedBy = this.likedBy.filter((id) => id.toString() !== userId.toString());
   } else {
-    console.log('Add like');
     this.likedBy.push(userId);
   }
   await this.save();
